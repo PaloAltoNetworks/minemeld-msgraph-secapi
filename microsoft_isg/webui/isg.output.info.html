@@ -1,0 +1,105 @@
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <h5 class="m-b-xs">STATUS</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6 col-md-6">
+        <table class="table table-condensed nodedetail-info-table">
+            <colgroup>
+                <col style="width: 30%">
+                <col>
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td>CLASS</td>
+                    <td>{{ vm.nodeState.class }}</td>
+                </tr>
+                <tr ng-if="vm.nodeConfig.prototype">
+                    <td>PROTOTYPE</td>
+                    <td><a tooltip-template="'tooltip.prototype.html'" ui-sref="prototypedetail({ prototypeName: vm.nodeConfig.prototype.split('.')[1], libraryName: vm.nodeConfig.prototype.split('.')[0] })">{{ vm.nodeConfig.prototype }}</a></td>
+                    <script type="text/ng-template" id="tooltip.prototype.html">
+                        <prototype-tooltip name="vm.nodeConfig.prototype"></prototype-tooltip>
+                    </script>
+                </tr>
+                <tr>
+                    <td>STATE</td>
+                    <td ng-switch on="vm.nodeState.state">
+                        <span ng-switch-when="5" class="label label-success">{{ vm.nodeState.stateAsString }}</span>
+                        <span ng-switch-default class="label label-warning">{{ vm.nodeState.stateAsString }}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-sm-6 col-md-6">
+        <table class="table table-condensed nodedetail-info-table">
+              <colgroup>
+                <col style="width: 15%">
+                <col style="width: 85%">
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td>OUTPUT</td>
+                    <td>
+                        <span class="label label-success" ng-if="vm.nodeState.output">ENABLED</span>
+                        <span class="label label-default" ng-if="!vm.nodeState.output">DISABLED</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>INPUTS</td>
+                    <td>
+                        <ul class="nodetails-info-inputs" ng-if="vm.nodeState.inputs.length > 0">
+                            <li ng-repeat="input in vm.nodeState.inputs"><a ui-sref="nodedetail({ nodename: input })">{{ input }}</a></li>
+                        </ul>
+                        <em ng-if="vm.nodeState.inputs.length == 0">none</em>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <h5 class="m-b-xs">SETTINGS</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6 col-md-6">
+        <table class="table table-condensed nodedetail-info-table" ng-controller="MSFTWDATPSideConfigController as sideConfig">
+            <colgroup>
+                <col style="width: 30%">
+                <col>
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td>CLIENT ID</td>
+                    <td tooltip="set client id" class="nodedetail-info-clickable" ng-click="sideConfig.setClientID()">
+                        <span ng-if="!sideConfig.client_id"><em>Not set</em></span>
+                        <span ng-if="sideConfig.client_id">{{ sideConfig.client_id }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>CLIENT SECRET</td>
+                    <td tooltip="set client secret" class="nodedetail-info-clickable" ng-click="sideConfig.setClientSecret()">
+                        <span ng-if="!sideConfig.client_secret"><em>Not set</em></span>
+                        <span ng-if="sideConfig.client_secret" class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>TENANT ID</td>
+                    <td tooltip="set tenant id" class="nodedetail-info-clickable" ng-click="sideConfig.setTenantID()">
+                        <span ng-if="!sideConfig.tenant_id"><em>Not set</em></span>
+                        <span ng-if="sideConfig.tenant_id">{{ sideConfig.tenant_id }}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row" ng-if="sideConfig.nodeConfig.node.config">
+    <div class="col-sm-12 col-md-12">
+        <h5 class="m-b-xs">CONFIG</h5>
+        <node-config class="nodedetail-info-config" config="sideConfig.nodeConfig.node.config"></node-config>
+    </div>
+</div>

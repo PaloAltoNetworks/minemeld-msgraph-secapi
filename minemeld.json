@@ -1,0 +1,19 @@
+{
+    "version": "0.0b1",
+    "name": "minemeld-msft-isg",
+    "author": "Palo Alto Networks",
+    "author_email": "devrel@paloaltonetworks.com",
+    "description": "MineMeld Nodes for Microsoft ISG API",
+    "entry_points": {
+        "minemeld_nodes": {
+            "microsoft_isg.Output": "microsoft_isg.node:Output"
+        },
+        "minemeld_prototypes": {
+            "microsoft_isg.prototypes": "microsoft_isg:prototypes"
+        },
+        "minemeld_webui": {
+            "microsoftISGWebui": "microsoft_isg:webui_blueprint"
+        }
+    },
+    "manifest_version": 0
+}
