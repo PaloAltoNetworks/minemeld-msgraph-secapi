@@ -19,6 +19,7 @@ from requests.exceptions import RequestException
 from minemeld.ft import ft_states  #pylint: disable=E0401
 from minemeld.ft.base import _counting  #pylint: disable=E0401
 from minemeld.ft.actorbase import ActorBaseFT  #pylint: disable=E0401
+from minemeld.ft.table import Table # pylint: disable=E0401
 
 LOG = logging.getLogger(__name__)
 AUTHORITY_BASE_URL = 'https://login.microsoftonline.com'
@@ -38,6 +39,8 @@ SHARE_LEVEL_2_ISG = {
     'amber': 3,
     'red': 4
 }
+
+EXPIRED = datetime.fromtimestamp(0).isoformat()
 
 
 class AuthConfigException(RuntimeError):
@@ -105,14 +108,17 @@ class Output(ActorBaseFT):
         output = False
         super(Output, self).connect(inputs, output)
 
+    def _initialize_table(self, truncate=False):
+        self.table = Table(name=self.name, truncate=truncate)
+
     def initialize(self):
-        pass
+        self._initialize_table()
 
     def rebuild(self):
-        pass
+        self._initialize_table(truncate=(self.last_checkpoint is None))
 
     def reset(self):
-        pass
+        self._initialize_table(truncate=True)
 
     def _get_auth_token(self):
         if self.client_id is None:
@@ -157,9 +163,40 @@ class Output(ActorBaseFT):
 
         result.raise_for_status()
 
+        return result.json()['id']
+
+    def _patch_indicator(self, token, id_, indicator):
+        result = requests.patch(
+            ENDPOINT_URL+'/{}'.format(id_),
+            headers={
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer {}'.format(token)
+            },
+            json=indicator
+        )
+
+        LOG.debug(result.text)
+
+        result.raise_for_status()
+
+    def _delete_indicator(self, token, id_):
+        result = requests.delete(
+            ENDPOINT_URL+'/{}'.format(id_),
+            headers={
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer {}'.format(token)
+            }
+        )
+
+        LOG.debug(result.text)
+
+        result.raise_for_status()
+
     def _push_loop(self):
         while True:
             msg = self._queue.get()
+
+            LOG.debug('{} - indicator {!r}'.format(self.name, msg))
 
             while True:
                 result = None
@@ -169,10 +206,20 @@ class Output(ActorBaseFT):
                     token = self._get_auth_token()
                     LOG.debug('{} - token: {}'.format(self.name, token))
 
-                    self._push_indicator(
-                        token=token,
-                        indicator=msg
-                    )
+                    isgid = self.table.get(msg['externalId'])
+                    if isgid is None:
+                        isgid = self._push_indicator(
+                            token=token,
+                            indicator=msg
+                        )
+                        self.table.put(msg['externalId'], {'id': isgid})
+                    else:
+                        isgid = isgid['id']
+                        if msg['expirationDateTime'] == EXPIRED:
+                            self._delete_indicator(token=token, id_=isgid)
+                            self.table.delete(msg['externalId'])
+                        else:
+                            self._patch_indicator(token=token, id_=isgid, indicator=msg)
 
                     self.statistics['indicator.tx'] += 1
                     break
@@ -277,7 +324,6 @@ class Output(ActorBaseFT):
             self.statistics['error.no_value'] += 1
             return
 
-        """
         try:
             self._queue.put(
                 self._encode_indicator(indicator, value, expired=True),
@@ -286,7 +332,6 @@ class Output(ActorBaseFT):
             )
         except Full:
             self.statistics['error.queue_full'] += 1
-        """
 
     @_counting('checkpoint.rx')
     def checkpoint(self, source=None, value=None):
@@ -313,6 +358,8 @@ class Output(ActorBaseFT):
 
         if self._checkpoint_glet is not None:
             self._checkpoint_glet.kill()
+
+        self.table.close()
 
     def hup(self, source=None):
         LOG.info('%s - hup received, reload side config', self.name)
