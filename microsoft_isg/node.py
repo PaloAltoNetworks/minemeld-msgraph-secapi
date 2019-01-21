@@ -163,6 +163,8 @@ class Output(ActorBaseFT):
 
         result.raise_for_status()
 
+        self.statistics['indicator.new'] += 1
+
         return result.json()['id']
 
     def _patch_indicator(self, token, id_, indicator):
@@ -179,6 +181,8 @@ class Output(ActorBaseFT):
 
         result.raise_for_status()
 
+        self.statistics['indicator.update'] += 1
+
     def _delete_indicator(self, token, id_):
         result = requests.delete(
             ENDPOINT_URL+'/{}'.format(id_),
@@ -190,7 +194,15 @@ class Output(ActorBaseFT):
 
         LOG.debug(result.text)
 
-        result.raise_for_status()
+        try:
+            result.raise_for_status()
+            self.statistics['indicator.delete'] += 1
+
+        except RequestException:
+            if result is not None and result.status_code == 404:
+                return
+
+            raise
 
     def _push_loop(self):
         while True:
@@ -221,7 +233,6 @@ class Output(ActorBaseFT):
                         else:
                             self._patch_indicator(token=token, id_=isgid, indicator=msg)
 
-                    self.statistics['indicator.tx'] += 1
                     break
 
                 except gevent.GreenletExit:
