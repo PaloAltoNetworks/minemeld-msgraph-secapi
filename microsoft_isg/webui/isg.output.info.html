@@ -66,7 +66,7 @@
 </div>
 <div class="row">
     <div class="col-sm-6 col-md-6">
-        <table class="table table-condensed nodedetail-info-table" ng-controller="MSFTWDATPSideConfigController as sideConfig">
+        <table class="table table-condensed nodedetail-info-table" ng-controller="MSFTISGSideConfigController as sideConfig">
             <colgroup>
                 <col style="width: 30%">
                 <col>
@@ -91,6 +91,23 @@
                     <td tooltip="set tenant id" class="nodedetail-info-clickable" ng-click="sideConfig.setTenantID()">
                         <span ng-if="!sideConfig.tenant_id"><em>Not set</em></span>
                         <span ng-if="sideConfig.tenant_id">{{ sideConfig.tenant_id }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>TARGET PRODUCT</td>
+                    <td tooltip="set target product" class="nodedetail-info-clickable" ng-click="sideConfig.setTargetProduct()">
+                        <span ng-if="!sideConfig.target_product"><em>Not set</em></span>
+                        <span ng-if="sideConfig.target_product">{{ sideConfig.target_product }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>RECOMMENDED ACTION</td>
+                    <td tooltip="set recommended action" class="nodedetail-info-clickable" ng-click="sideConfig.setRecommendedAction()">
+                        <span ng-if="!sideConfig.recommended_action"><em>Not set</em></span>
+                        <span ng-if="sideConfig.recommended_action == 1">Allow</span>
+                        <span ng-if="sideConfig.recommended_action == 2">Block</span>
+                        <span ng-if="sideConfig.recommended_action == 3">Alert</span>
+                        <span ng-if="sideConfig.recommended_action > 3">Unknown</span>
                     </td>
                 </tr>
             </tbody>

@@ -68,6 +68,9 @@ class Output(ActorBaseFT):
         self.client_secret = self.config.get('client_secret', None)
         self.tenant_id = self.config.get('tenant_id', None)
 
+        self.recommended_action = self.config.get('recommended_action', 3)
+        self.target_product = self.config.get('target_product', None)
+
         self.target_product = self.config.get('target_product', 'minemeld')
         self.threat_type = self.config.get('threat_type', 'malware')
 
@@ -103,6 +106,16 @@ class Output(ActorBaseFT):
         if tenant_id is not None:
             self.tenant_id = tenant_id
             LOG.info('{} - tenant_id set'.format(self.name))
+
+        recommended_action = sconfig.get('recommended_action', None)
+        if recommended_action is not None:
+            self.recommended_action = recommended_action
+            LOG.info('{} - recommended_action set'.format(self.name))
+
+        target_product = sconfig.get('target_product', None)
+        if target_product is not None:
+            self.target_product = target_product
+            LOG.info('{} - target_product set'.format(self.name))
 
     def connect(self, inputs, output):
         output = False
@@ -284,6 +297,12 @@ class Output(ActorBaseFT):
             'threatType': self.threat_type
         }
 
+        if self.recommended_action is not None:
+            result['recommendedAction'] = self.recommended_action
+
+        if self.target_product is not None:
+            result['targetProduct'] = self.target_product
+
         if type_ == 'URL':
             result['url'] = indicator
         elif type_ == 'domain':
@@ -294,10 +313,10 @@ class Output(ActorBaseFT):
         elif type_ == 'IPv4':
             if '-' in indicator:
                 a1, a2 = indicator.split('-', 1)
-                indicator = netaddr.IPRange(a1, a2).cidrs()[0]
+                indicator = str(netaddr.IPRange(a1, a2).cidrs()[0])
 
             parsed = netaddr.IPNetwork(indicator)
-            if parsed.size == 1:
+            if parsed.size == 1 and '/' not in str(indicator):
                 result['networkIPv4'] = str(indicator)
             else:
                 result['networkCidrBlock'] = str(indicator)
@@ -305,6 +324,8 @@ class Output(ActorBaseFT):
         else:
             self.statistics['error.unhandled_type'] += 1
             raise RuntimeError('{} - Unhandled {}'.format(self.name, type_))
+
+        LOG.debug('{!r} - add indicator {!r} to queue'.format(self.name, result))
 
         return result
 

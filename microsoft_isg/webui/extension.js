@@ -10,6 +10,8 @@ function MSFTISGSideConfigController($scope, MinemeldConfigService, MineMeldRunn
     vm.client_id = undefined;
     vm.client_secret = undefined;
     vm.tenant_id = undefined;
+    vm.recommended_action = undefined;
+    vm.target_product = undefined;
 
     vm.loadSideConfig = function() {
         var nodename = $scope.$parent.vm.nodename;
@@ -37,11 +39,25 @@ function MSFTISGSideConfigController($scope, MinemeldConfigService, MineMeldRunn
             } else {
                 vm.tenant_id = undefined;
             }
+
+            if (result.target_product) {
+                vm.target_product = result.target_product;
+            } else {
+                vm.target_product = undefined;
+            }
+
+            if (result.recommended_action) {
+                vm.recommended_action = result.recommended_action;
+            } else {
+                vm.recommended_action = undefined;
+            }
         }, (error) => {
             toastr.error('ERROR RETRIEVING NODE SIDE CONFIG: ' + error.status);
             vm.client_id = undefined;
             vm.client_secret = undefined;
             vm.tenant_id = undefined;
+            vm.recommended_action = undefined;
+            vm.target_product = undefined;
         });
     };
 
@@ -58,6 +74,12 @@ function MSFTISGSideConfigController($scope, MinemeldConfigService, MineMeldRunn
         }
         if (vm.tenant_id) {
             side_config.tenant_id = vm.tenant_id;
+        }
+        if (vm.recommended_action) {
+            side_config.recommended_action = vm.recommended_action;
+        }
+        if (vm.target_product) {
+            side_config.target_product = vm.target_product;
         }
 
         return MinemeldConfigService.saveDataFile(
@@ -127,6 +149,50 @@ function MSFTISGSideConfigController($scope, MinemeldConfigService, MineMeldRunn
                 vm.loadSideConfig();
             }, (error) => {
                 toastr.error('ERROR SETTING TENANT ID: ' + error.statusText);
+            });
+        });
+    };
+
+    vm.setTargetProduct = function() {
+        var mi = $modal.open({
+            templateUrl: '/extensions/webui/microsoftISGWebui/isg.output.stp.modal.html',
+            controller: ['$modalInstance', MSFTISGTargetProductController],
+            controllerAs: 'vm',
+            bindToController: true,
+            backdrop: 'static',
+            animation: false
+        });
+
+        mi.result.then((result) => {
+            vm.target_product = result.target_product;
+
+            return vm.saveSideConfig().then((result) => {
+                toastr.success('TARGET PRODUCT SET');
+                vm.loadSideConfig();
+            }, (error) => {
+                toastr.error('ERROR SETTING TARGET PRODUCT: ' + error.statusText);
+            });
+        });
+    };
+
+    vm.setRecommendedAction = function() {
+        var mi = $modal.open({
+            templateUrl: '/extensions/webui/microsoftISGWebui/isg.output.sra.modal.html',
+            controller: ['$modalInstance', MSFTISGRecommendedActionController],
+            controllerAs: 'vm',
+            bindToController: true,
+            backdrop: 'static',
+            animation: false
+        });
+
+        mi.result.then((result) => {
+            vm.recommended_action = result.recommended_action;
+
+            return vm.saveSideConfig().then((result) => {
+                toastr.success('RECOMMENDED ACTION SET');
+                vm.loadSideConfig();
+            }, (error) => {
+                toastr.error('ERROR SETTING RECOMMENDED ACTION: ' + error.statusText);
             });
         });
     };
@@ -213,6 +279,69 @@ function MSFTISGTenantIDController($modalInstance) {
         var result = {};
 
         result.tenant_id = vm.tenant_id;
+
+        $modalInstance.close(result);
+    }
+
+    vm.cancel = function() {
+        $modalInstance.dismiss();
+    }
+}
+
+function MSFTISGTargetProductController($modalInstance) {
+    var vm = this;
+
+    vm.availableTargetProducts = ['Azure Sentinel'];
+    vm.target_product = undefined;
+
+    vm.valid = function() {
+        if (!vm.target_product) {
+            return false;
+        }
+
+        return true;
+    };
+
+    vm.save = function() {
+        var result = {};
+
+        result.target_product = vm.target_product;
+
+        $modalInstance.close(result);
+    }
+
+    vm.cancel = function() {
+        $modalInstance.dismiss();
+    }
+}
+
+function MSFTISGRecommendedActionController($modalInstance) {
+    var vm = this;
+
+    vm.availableActions = ['Allow', 'Block', 'Alert'];
+
+    vm.recommended_action_string = undefined;
+    vm.recommended_action = undefined;
+
+    vm.hasChanged = function() {
+        vm.recommended_action = 1+vm.availableActions.indexOf(vm.recommended_action_string);
+        if (vm.recommended_action <= 0) {
+            vm.recommended_action = undefined;
+        }
+    }
+
+    vm.valid = function() {
+        if (!vm.recommended_action) {
+            return false;
+        }
+
+        return true;
+    };
+
+    vm.save = function() {
+        var result = {};
+
+        result.recommended_action = vm.recommended_action;
 
         $modalInstance.close(result);
     }
