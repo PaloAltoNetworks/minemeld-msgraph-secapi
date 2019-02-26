@@ -282,7 +282,7 @@ class Output(ActorBaseFT):
             ', '.join(value['sources'])
         )
         external_id = '{}:{}'.format(type_, indicator)
-        expiration = datetime.utcnow() + timedelta(days=365)
+        expiration = datetime.utcnow() + timedelta(days=29)
         if expired:
             expiration = datetime.fromtimestamp(0)
         expiration = expiration.isoformat()
