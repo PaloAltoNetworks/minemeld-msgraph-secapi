@@ -291,7 +291,7 @@ function MSFTISGTenantIDController($modalInstance) {
 function MSFTISGTargetProductController($modalInstance) {
     var vm = this;
 
-    vm.availableTargetProducts = ['AzureSentinel'];
+    vm.availableTargetProducts = ['Azure Sentinel'];
     vm.target_product = undefined;
 
     vm.valid = function() {
