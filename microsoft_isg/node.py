@@ -298,7 +298,7 @@ class Output(ActorBaseFT):
         }
 
         if self.recommended_action is not None:
-            result['recommendedAction'] = self.recommended_action
+            result['action'] = self.recommended_action
 
         if self.target_product is not None:
             result['targetProduct'] = self.target_product
@@ -306,7 +306,7 @@ class Output(ActorBaseFT):
         if type_ == 'URL':
             result['url'] = indicator
         elif type_ == 'domain':
-            result['hostName'] = indicator
+            result['domainName'] = indicator
         elif type_ in ['md5', 'sha256', 'sha1']:
             result['fileHashType'] = HASH_2_ISG[type_]
             result['fileHashValue'] = indicator
