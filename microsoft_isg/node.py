@@ -25,7 +25,7 @@ LOG = logging.getLogger(__name__)
 AUTHORITY_BASE_URL = 'https://login.microsoftonline.com'
 AUTHORITY_URL = 'https://login.microsoftonline.com/{}'
 RESOURCE = 'https://graph.microsoft.com/'
-ENDPOINT_URL = 'https://graph.microsoft.com/stagingbeta/security/tiindicators'
+ENDPOINT_URL = 'https://graph.microsoft.com/beta/security/tiindicators'
 
 HASH_2_ISG = {
     'sha1': 1,
