@@ -318,18 +318,8 @@ function MSFTISGTargetProductController($modalInstance) {
 function MSFTISGRecommendedActionController($modalInstance) {
     var vm = this;
 
-    vm.availableActions = ['Allow', 'Block', 'Alert'];
-
-    vm.recommended_action_string = undefined;
+    vm.availableActions = ['Alert', 'Allow', 'Block', 'Unknown'];
     vm.recommended_action = undefined;
-
-    vm.hasChanged = function() {
-        vm.recommended_action = 1+vm.availableActions.indexOf(vm.recommended_action_string);
-        if (vm.recommended_action <= 0) {
-            vm.recommended_action = undefined;
-        }
-    }
-
     vm.valid = function() {
         if (!vm.recommended_action) {
             return false;
@@ -341,7 +331,7 @@ function MSFTISGRecommendedActionController($modalInstance) {
     vm.save = function() {
         var result = {};
 
-        result.recommended_action = vm.recommended_action;
+        result.recommended_action = vm.recommended_action.charAt(0).toLowerCase() + vm.recommended_action.slice(1);
 
         $modalInstance.close(result);
     }

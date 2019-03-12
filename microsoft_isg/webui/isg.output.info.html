@@ -104,10 +104,7 @@
                     <td>RECOMMENDED ACTION</td>
                     <td tooltip="set recommended action" class="nodedetail-info-clickable" ng-click="sideConfig.setRecommendedAction()">
                         <span ng-if="!sideConfig.recommended_action"><em>Not set</em></span>
-                        <span ng-if="sideConfig.recommended_action == 1">Allow</span>
-                        <span ng-if="sideConfig.recommended_action == 2">Block</span>
-                        <span ng-if="sideConfig.recommended_action == 3">Alert</span>
-                        <span ng-if="sideConfig.recommended_action > 3">Unknown</span>
+                        <span ng-if="sideConfig.recommended_action">{{ sideConfig.recommended_action.charAt(0).toUpperCase() + sideConfig.recommended_action.slice(1) }}</span>
                     </td>
                 </tr>
             </tbody>

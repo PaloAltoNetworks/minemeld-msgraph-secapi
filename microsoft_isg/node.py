@@ -25,7 +25,7 @@ LOG = logging.getLogger(__name__)
 AUTHORITY_BASE_URL = 'https://login.microsoftonline.com'
 AUTHORITY_URL = 'https://login.microsoftonline.com/{}'
 RESOURCE = 'https://graph.microsoft.com/'
-ENDPOINT_URL = 'https://graph.microsoft.com/testsecurityppe/security/tiindicators'
+ENDPOINT_URL = 'https://graph.microsoft.com/beta/security/tiindicators'
 
 HASH_2_ISG = {
     'sha1': 1,
@@ -282,7 +282,7 @@ class Output(ActorBaseFT):
             ', '.join(value['sources'])
         )
         external_id = '{}:{}'.format(type_, indicator)
-        expiration = datetime.utcnow() + timedelta(days=365)
+        expiration = datetime.utcnow() + timedelta(days=29)
         if expired:
             expiration = datetime.fromtimestamp(0)
         expiration = expiration.isoformat()
@@ -298,7 +298,7 @@ class Output(ActorBaseFT):
         }
 
         if self.recommended_action is not None:
-            result['recommendedAction'] = self.recommended_action
+            result['action'] = self.recommended_action
 
         if self.target_product is not None:
             result['targetProduct'] = self.target_product
@@ -306,7 +306,7 @@ class Output(ActorBaseFT):
         if type_ == 'URL':
             result['url'] = indicator
         elif type_ == 'domain':
-            result['hostName'] = indicator
+            result['domainName'] = indicator
         elif type_ in ['md5', 'sha256', 'sha1']:
             result['fileHashType'] = HASH_2_ISG[type_]
             result['fileHashValue'] = indicator
