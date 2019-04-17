@@ -355,7 +355,7 @@ angular.module('microsoftGSAWebui', [])
         });
     }])
     .run(['NodeDetailResolver', '$state', function(NodeDetailResolver, $state) {
-        NodeDetailResolver.registerClass('microsoft_isg.node.Output', {
+        NodeDetailResolver.registerClass('microsoft_graph_secapi.node.Output', {
             tabs: [{
                 icon: 'fa fa-circle-o',
                 tooltip: 'INFO',
