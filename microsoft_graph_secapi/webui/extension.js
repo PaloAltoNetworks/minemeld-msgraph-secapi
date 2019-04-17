@@ -349,7 +349,7 @@ angular.module('microsoftGSAWebui', [])
     ])
     .config(['$stateProvider', function($stateProvider) {
         $stateProvider.state('nodedetail.msftisgoutputinfo', {
-            templateUrl: '/extensions/webui/microsoftISGWebui/isg.output.info.html',
+            templateUrl: '/extensions/webui/microsoftGSAWebui/isg.output.info.html',
             controller: 'NodeDetailInfoController',
             controllerAs: 'vm'
         });
