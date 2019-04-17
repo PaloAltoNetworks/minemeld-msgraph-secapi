@@ -1,18 +1,18 @@
 {
-    "version": "0.0b8",
-    "name": "minemeld-msft-isg",
+    "version": "0.0b9",
+    "name": "minemeld-msgraph-secapi",
     "author": "Palo Alto Networks",
     "author_email": "devrel@paloaltonetworks.com",
-    "description": "MineMeld Nodes for Microsoft ISG API",
+    "description": "MineMeld Nodes for Microsoft Graph Security API",
     "entry_points": {
         "minemeld_nodes": {
-            "microsoft_isg.Output": "microsoft_isg.node:Output"
+            "microsoft_graph_secapi.Output": "microsoft_graph_secapi.node:Output"
         },
         "minemeld_prototypes": {
-            "microsoft_isg.prototypes": "microsoft_isg:prototypes"
+            "microsoft_graph_secapi.prototypes": "microsoft_graph_secapi:prototypes"
         },
         "minemeld_webui": {
-            "microsoftISGWebui": "microsoft_isg:webui_blueprint"
+            "microsoftGSAWebui": "microsoft_graph_secapi:webui_blueprint"
         }
     },
     "manifest_version": 0
