@@ -1,0 +1,19 @@
+url: https://www.microsoft.com/en-us/security/operations/intelligence
+description: >
+  Nodes for Microsoft Graph Security API
+
+prototypes:
+  output:
+    author: Palo Alto Networks DevRel
+    class: microsoft_graph_secapi.Output
+    development_status: EXPERIMENTAL
+    node_type: output
+    indicator_types:
+      - URL
+      - IPv4
+      - domain
+    tags:
+      - extension
+    description: >
+      Output node for Microsoft Graph Security API
+    config: {}
