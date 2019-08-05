@@ -1,11 +1,11 @@
 url: https://www.microsoft.com/en-us/security/operations/intelligence
 description: >
-  Nodes for Microsoft ISG API
+  Nodes for Microsoft Graph Security API
 
 prototypes:
   output:
     author: Palo Alto Networks DevRel
-    class: microsoft_isg.Output
+    class: microsoft_graph_secapi.Output
     development_status: EXPERIMENTAL
     node_type: output
     indicator_types:
@@ -15,5 +15,5 @@ prototypes:
     tags:
       - extension
     description: >
-      Output node for Microsoft ISG
+      Output node for Microsoft Graph Security API
     config: {}

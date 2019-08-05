@@ -1,4 +1,4 @@
-console.log('Loading Microsoft ISG Output WebUI');
+console.log('Loading Microsoft Graph API Output WebUI');
 
 (function() {
 
@@ -91,7 +91,7 @@ function MSFTISGSideConfigController($scope, MinemeldConfigService, MineMeldRunn
 
     vm.setClientID = function() {
         var mi = $modal.open({
-            templateUrl: '/extensions/webui/microsoftISGWebui/isg.output.scid.modal.html',
+            templateUrl: '/extensions/webui/microsoftGSAWebui/isg.output.scid.modal.html',
             controller: ['$modalInstance', MSFTISGClientIDController],
             controllerAs: 'vm',
             bindToController: true,
@@ -112,7 +112,7 @@ function MSFTISGSideConfigController($scope, MinemeldConfigService, MineMeldRunn
     };
     vm.setClientSecret = function() {
         var mi = $modal.open({
-            templateUrl: '/extensions/webui/microsoftISGWebui/isg.output.scs.modal.html',
+            templateUrl: '/extensions/webui/microsoftGSAWebui/isg.output.scs.modal.html',
             controller: ['$modalInstance', MSFTISGClientSecretController],
             controllerAs: 'vm',
             bindToController: true,
@@ -133,7 +133,7 @@ function MSFTISGSideConfigController($scope, MinemeldConfigService, MineMeldRunn
     };
     vm.setTenantID = function() {
         var mi = $modal.open({
-            templateUrl: '/extensions/webui/microsoftISGWebui/isg.output.stid.modal.html',
+            templateUrl: '/extensions/webui/microsoftGSAWebui/isg.output.stid.modal.html',
             controller: ['$modalInstance', MSFTISGTenantIDController],
             controllerAs: 'vm',
             bindToController: true,
@@ -155,7 +155,7 @@ function MSFTISGSideConfigController($scope, MinemeldConfigService, MineMeldRunn
 
     vm.setTargetProduct = function() {
         var mi = $modal.open({
-            templateUrl: '/extensions/webui/microsoftISGWebui/isg.output.stp.modal.html',
+            templateUrl: '/extensions/webui/microsoftGSAWebui/isg.output.stp.modal.html',
             controller: ['$modalInstance', MSFTISGTargetProductController],
             controllerAs: 'vm',
             bindToController: true,
@@ -177,7 +177,7 @@ function MSFTISGSideConfigController($scope, MinemeldConfigService, MineMeldRunn
 
     vm.setRecommendedAction = function() {
         var mi = $modal.open({
-            templateUrl: '/extensions/webui/microsoftISGWebui/isg.output.sra.modal.html',
+            templateUrl: '/extensions/webui/microsoftGSAWebui/isg.output.sra.modal.html',
             controller: ['$modalInstance', MSFTISGRecommendedActionController],
             controllerAs: 'vm',
             bindToController: true,
@@ -341,7 +341,7 @@ function MSFTISGRecommendedActionController($modalInstance) {
     }
 }
 
-angular.module('microsoftISGWebui', [])
+angular.module('microsoftGSAWebui', [])
     .controller('MSFTISGSideConfigController', [
         '$scope', 'MinemeldConfigService', 'MineMeldRunningConfigStatusService',
         'toastr', '$modal', 'ConfirmService', '$timeout',
@@ -349,13 +349,13 @@ angular.module('microsoftISGWebui', [])
     ])
     .config(['$stateProvider', function($stateProvider) {
         $stateProvider.state('nodedetail.msftisgoutputinfo', {
-            templateUrl: '/extensions/webui/microsoftISGWebui/isg.output.info.html',
+            templateUrl: '/extensions/webui/microsoftGSAWebui/isg.output.info.html',
             controller: 'NodeDetailInfoController',
             controllerAs: 'vm'
         });
     }])
     .run(['NodeDetailResolver', '$state', function(NodeDetailResolver, $state) {
-        NodeDetailResolver.registerClass('microsoft_isg.node.Output', {
+        NodeDetailResolver.registerClass('microsoft_graph_secapi.node.Output', {
             tabs: [{
                 icon: 'fa fa-circle-o',
                 tooltip: 'INFO',

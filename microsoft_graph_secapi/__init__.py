@@ -7,4 +7,4 @@ def prototypes():
 def webui_blueprint():
     from minemeld.flask import aaa  #pylint: disable=E0401
 
-    return aaa.MMBlueprint('microsoftISGWebui', __name__, static_folder='webui', static_url_path='')
+    return aaa.MMBlueprint('microsoftGSAWebui', __name__, static_folder='webui', static_url_path='')

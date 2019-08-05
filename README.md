@@ -1,4 +1,5 @@
-# minemeld-msft-isg
+# minemeld-msgraph-secapi
 
-MineMeld nodes fot Microsoft ISG
+Minemeld nodes for Microsoft Graph Security API
+
 
