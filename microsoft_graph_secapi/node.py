@@ -19,6 +19,7 @@ from requests.exceptions import RequestException, HTTPError
 from minemeld.ft import ft_states  #pylint: disable=E0401
 from minemeld.ft.base import _counting  #pylint: disable=E0401
 from minemeld.ft.actorbase import ActorBaseFT  #pylint: disable=E0401
+from minemeld import __version__
 
 LOG = logging.getLogger(__name__)
 AUTHORITY_BASE_URL = 'https://login.microsoftonline.com'
@@ -28,7 +29,7 @@ ENDPOINT_VERSION='beta'
 ENDPOINT_URL = 'https://graph.microsoft.com/{}/security/tiIndicators'.format(ENDPOINT_VERSION)
 ENDPOINT_SUBMITBATCH=ENDPOINT_URL+'/submitTiIndicators'
 ENDPOINT_DELETEBATCH=ENDPOINT_URL+'/deleteTiIndicatorsByExternalId'
-
+USER_AGENT= 'PaloAltoNetworks-MineMeld/{}'.format(__version__)
 # Maximum number of batch upload
 MAX_BATCH_SIZE=50
 
@@ -179,7 +180,8 @@ class Output(ActorBaseFT):
             ENDPOINT_SUBMITBATCH,
             headers={
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer {}'.format(token)
+                'Authorization': 'Bearer {}'.format(token),
+                'User-Agent': USER_AGENT
             },
             json=message
         )
@@ -224,7 +226,8 @@ class Output(ActorBaseFT):
             ENDPOINT_DELETEBATCH,
             headers={
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer {}'.format(token)
+                'Authorization': 'Bearer {}'.format(token),
+                'User-Agent': USER_AGENT
             },
             json=message
         )
